@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/JoseErildo/bibliotecaFirebase#readme",
   "dependencies": {
-    "firebase": "^8.1.1"
+    "express": "^4.17.1",
+    "firebase": "^8.1.1",
+    "http-server": "^0.12.3",
+    "nodemon": "^2.0.6"
   }
 }
