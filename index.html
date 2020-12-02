@@ -4,18 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
-
 </head>
 <body>
-    <h1>FIrebase</h1>
-     
-    <ul>
-        <li><a href="realTime.html">Real Time Database</a></li>
-    </ul>
-    <script class="text-center" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-analytics.js"></script>
-     <script type="javascript" src="js/app.js"></script>                        
+    <label>Nome do Livro</label> <input id="nomebox" type="text"></input><br><br>
+    <label>Id</label> <input id="idbox" type="text"></input><br><br>
+    <label>Autor</label><input id="autorbox" type="text"></input><br><br>
+    <label>Descricao</label> <input id="descbox" type="text"></input><br><br>
+    <label>Disponibilidade</label><input id="dispbox" type="text"></input><br><br>
+    <br><br>
+    <button id="insert">INSERT</button>
+    <button id="select">SELECT</button>
+    <button id="update">UPDATE</button>
+    <button id="delete">DELETE</button>
+
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+
+    <script id="MainScript">
+        var firebaseConfig = {
+            apiKey: "AIzaSyBDSYBfEAhVwwD8naXDEKGcD5ahJFazoA8",
+            authDomain: "biblioteca-a6c29.firebaseapp.com",
+            databaseURL: "https://biblioteca-a6c29.firebaseio.com",
+            projectId: "biblioteca-a6c29",
+            storageBucket: "biblioteca-a6c29.appspot.com",
+            messagingSenderId: "603928348363",
+            appId: "1:603928348363:web:f6f90187f8f98fc0823d4e"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        var nameV, rollV, secV, genV;
+        function Ready(){
+            nameV = document.getElementById("namebox").value;
+            rollV = document.getElementById("rollbox").value;
+            secV = document.getElementById("secbox").value;
+            genV = document.getElementById("genbox").value;
+        }
+
+        ///insert
+        document.getElementById('insert').onclick = function(){
+            Ready();
+
+            firebase.database().ref('student/' + rollV).set({
+                NameOfStudent: nameV,
+                RollNo: rollV,
+                Section: secV,
+                Gender: genV
+            });
+        }
+
+        //select
+        document.getElementById("select").onclick = function(){
+            Ready();
+            firebase.database().ref("student/"+rollV).on('value', function(snapshot){
+                document.getElementById("namebox").value = snapshot.val().NameOfStudent;
+                document.getElementById("secbox").value = snapshot.val().Section;
+                document.getElementById("genbox").value = snapshot.val().Gender;
+            });
+        }
+
+        //update
+        document.getElementById('update').onclick = function(){
+            Ready();
+            firebase.database().ref('student/' + rollV).update({
+                NameOfStudent: nameV,
+                RollNo: rollV,
+                Section: secV,
+                Gender: genV
+            });
+        }
+
+        //delete
+        document.getElementById('delete').onclick = function(){
+            Ready();
+            firebase.database().ref('student/' + rollV).remove();
+        }
+    </script>
+
 </body>
 </html>
