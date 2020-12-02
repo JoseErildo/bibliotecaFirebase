@@ -1,22 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>SMB</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 </head>
-<body>
-    <label>Nome do Livro</label> <input id="nomebox" type="text"></input><br><br>
-    <label>Id</label> <input id="idbox" type="text"></input><br><br>
-    <label>Autor</label><input id="autorbox" type="text"></input><br><br>
-    <label>Descricao</label> <input id="descbox" type="text"></input><br><br>
-    <label>Disponibilidade</label><input id="dispbox" type="text"></input><br><br>
-    <br><br>
-    <button id="insert">INSERT</button>
-    <button id="select">SELECT</button>
-    <button id="update">UPDATE</button>
-    <button id="delete">DELETE</button>
 
+<body>
+    <div align="center">
+        <div class="column is-one-third" align="center">
+            <label class="label">Nome do Livro</label>
+            <input class="input is-rounded label" placeholder="ex: To Data Bases Enginners" id="nomebox" type="text"></input><br>
+
+            <label class="label">Id</label>
+            <input class="input is-rounded label" placeholder="ex: 123" id="idbox" type="text"></input><br>
+
+            <label class="label">Autor</label>
+            <input class="input is-rounded label" placeholder="ex: Taciano" id="autorbox" type="text"></input><br>
+
+            <label class="label">Descrição</label>
+            <input class="input is-rounded label" placeholder="ex: Técnicas avançadas de banco de dados." id="descbox" type="text"></input><br>
+
+            <label class="label">Disponibilidade</label>
+            <input class="input is-rounded label" placeholder="ex: " id="dispbox" type="text"></input><br>
+        </div>
+        <div class="buttons column is-one-third" align="center">
+            <button class="button is-success" id="insert"><strong>INSERT</strong></button>
+            <button class="button is-info" id="select"><strong>SELECT</strong></button>
+            <button class="button is-warning" id="update"><strong>UPDATE</strong></button>
+            <button class="button is-danger" id="delete"><strong>DELETE</strong></button>
+        </div>
+    </div>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
@@ -35,7 +51,7 @@
         firebase.initializeApp(firebaseConfig);
 
         var nameV, rollV, secV, genV;
-        function Ready(){
+        function Ready() {
             nameV = document.getElementById("namebox").value;
             rollV = document.getElementById("rollbox").value;
             secV = document.getElementById("secbox").value;
@@ -43,7 +59,7 @@
         }
 
         ///insert
-        document.getElementById('insert').onclick = function(){
+        document.getElementById('insert').onclick = function () {
             Ready();
 
             firebase.database().ref('student/' + rollV).set({
@@ -55,9 +71,9 @@
         }
 
         //select
-        document.getElementById("select").onclick = function(){
+        document.getElementById("select").onclick = function () {
             Ready();
-            firebase.database().ref("student/"+rollV).on('value', function(snapshot){
+            firebase.database().ref("student/" + rollV).on('value', function (snapshot) {
                 document.getElementById("namebox").value = snapshot.val().NameOfStudent;
                 document.getElementById("secbox").value = snapshot.val().Section;
                 document.getElementById("genbox").value = snapshot.val().Gender;
@@ -65,7 +81,7 @@
         }
 
         //update
-        document.getElementById('update').onclick = function(){
+        document.getElementById('update').onclick = function () {
             Ready();
             firebase.database().ref('student/' + rollV).update({
                 NameOfStudent: nameV,
@@ -76,11 +92,12 @@
         }
 
         //delete
-        document.getElementById('delete').onclick = function(){
+        document.getElementById('delete').onclick = function () {
             Ready();
             firebase.database().ref('student/' + rollV).remove();
         }
     </script>
 
 </body>
+
 </html>
