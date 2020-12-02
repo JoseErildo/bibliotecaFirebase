@@ -23,14 +23,16 @@
             <label class="label">Descrição</label>
             <input class="input is-rounded label" placeholder="ex: Técnicas avançadas de banco de dados." id="descbox" type="text"></input><br>
 
-            <label class="label">Disponibilidade</label>
-            <input class="input is-rounded label" placeholder="ex: " id="dispbox" type="text"></input><br>
+            <!--<label class="label">Disponibilidade</label>-->
+            <!--<input class="input is-rounded label" placeholder="ex: " id="dispbox" type="text"></input><br>-->
         </div>
         <div class="buttons column is-one-third" align="center">
             <button class="button is-success" id="insert"><strong>INSERT</strong></button>
             <button class="button is-info" id="select"><strong>SELECT</strong></button>
             <button class="button is-warning" id="update"><strong>UPDATE</strong></button>
             <button class="button is-danger" id="delete"><strong>DELETE</strong></button>
+            <button class="button is-active" id="pegarL"><strong>PEGAR LIVRO</strong></button>
+            <button class="button is-active" id="devolverL"><strong>DEVOLVER LIVRO</strong></button>
         </div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
@@ -49,53 +51,86 @@
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-
-        var nameV, rollV, secV, genV;
-        function Ready() {
-            nameV = document.getElementById("namebox").value;
-            rollV = document.getElementById("rollbox").value;
-            secV = document.getElementById("secbox").value;
-            genV = document.getElementById("genbox").value;
+        var nomeV, idV, autorV, descV, dispV;
+        function Ready(){
+            nomeV = document.getElementById("nomebox").value;
+            idV = document.getElementById("idbox").value;
+            autorV = document.getElementById("autorbox").value;
+            descV = document.getElementById("descbox").value;
+            //dispV = document.getElementById("dispbox").value;
         }
-
         ///insert
-        document.getElementById('insert').onclick = function () {
+        document.getElementById('insert').onclick = function(){
             Ready();
-
-            firebase.database().ref('student/' + rollV).set({
-                NameOfStudent: nameV,
-                RollNo: rollV,
-                Section: secV,
-                Gender: genV
+            firebase.database().ref('livro/' + idV).set({
+                nomeDoLivro: nomeV,
+                id: idV,
+                autor: autorV,
+                descricao: descV,
+                disponibilidade: 'disponivel'
             });
+            alert('Livro Cadastrado')
         }
-
         //select
-        document.getElementById("select").onclick = function () {
+        document.getElementById("select").onclick = function(){
             Ready();
-            firebase.database().ref("student/" + rollV).on('value', function (snapshot) {
-                document.getElementById("namebox").value = snapshot.val().NameOfStudent;
-                document.getElementById("secbox").value = snapshot.val().Section;
-                document.getElementById("genbox").value = snapshot.val().Gender;
+            firebase.database().ref("livro/"+idV).on('value', function(snapshot){
+                document.getElementById("nomebox").value = snapshot.val().nomeDoLivro;
+                document.getElementById("autorbox").value = snapshot.val().autor;
+                document.getElementById("descbox").value = snapshot.val().descricao;
+                //document.getElementById("dispbox").value = snapshot.val().disponibilidade;
             });
         }
-
         //update
-        document.getElementById('update').onclick = function () {
+        document.getElementById('update').onclick = function(){
             Ready();
-            firebase.database().ref('student/' + rollV).update({
-                NameOfStudent: nameV,
-                RollNo: rollV,
-                Section: secV,
-                Gender: genV
+            firebase.database().ref('livro/' + idV).update({
+                nomeDoLivro: nomeV,
+                id: idV,
+                autor: autorV,
+                descricao: descV,
+                //disponibilidade: dispV
             });
+            alert('Dados do Livro Atualizados')
         }
-
         //delete
-        document.getElementById('delete').onclick = function () {
+        document.getElementById('delete').onclick = function(){
             Ready();
-            firebase.database().ref('student/' + rollV).remove();
+            firebase.database().ref('livro/' + idV).remove();
+            alert('Livro removido')
         }
+        //pegar livro
+        document.getElementById("pegarL").onclick = function(){
+            Ready();
+            var verifica
+            firebase.database().ref("livro/"+idV).on('value', function(snapshot){
+                verifica = snapshot.val().disponibilidade;
+            });
+            if (verifica != 'disponivel'){
+                alert('Livro Ocupado');
+            }else{
+                alert('Livro Pego')
+                firebase.database().ref('livro/' + idV).update({
+                disponibilidade: 'ocupado'
+                });
+            }
+        }
+        //devolverlivro
+        document.getElementById("devolverL").onclick = function(){
+            Ready();
+            var verifica
+            firebase.database().ref("livro/"+idV).on('value', function(snapshot){
+                verifica = snapshot.val().disponibilidade;
+            });
+            if (verifica == 'ocupado'){
+                alert('Livro Devolvido');
+                firebase.database().ref('livro/' + idV).update({
+                    disponibilidade: 'disponivel'
+                });
+            }else{
+                alert('Não há o que devolver, o livro está disponível')
+            }
+    }
     </script>
 
 </body>
